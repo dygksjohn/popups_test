@@ -1,0 +1,18 @@
+services:
+  # 백엔드 서비스
+  backend:
+    build: ./backend
+    container_name: spring-api
+    expose:
+      - "8080"
+    restart: always
+
+  # 프론트엔드 서비스
+  frontend:
+    build: ./frontend
+    container_name: react-web
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
