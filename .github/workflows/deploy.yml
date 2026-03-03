@@ -2,7 +2,7 @@ name: CI/CD Deploy
 
 on:
   push:
-    branches: [ "develop" ] # 브랜치명 확인 (master 혹은 main)
+    branches: [ "main" ] # 브랜치명 확인 (master 혹은 main)
 
 jobs:
   deploy:
