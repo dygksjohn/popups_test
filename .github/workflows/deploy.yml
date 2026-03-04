@@ -24,6 +24,8 @@ jobs:
         working-directory: ./pupoo_frontend 
         run: |
           npm install
+          # 리눅스용 바이너리 강제 설치
+          npm install -D @lightningcss/linux-x64-gnu
           npm run build
 
       - name: Docker Deploy
