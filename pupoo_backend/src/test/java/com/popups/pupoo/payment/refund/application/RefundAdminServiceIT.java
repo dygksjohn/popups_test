@@ -19,6 +19,7 @@ import com.popups.pupoo.program.domain.enums.ProgramCategory;
 import com.popups.pupoo.program.domain.model.Program;
 import com.popups.pupoo.program.persistence.ProgramRepository;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
+@Disabled("통합 테스트는 별도 DB 환경이 필요하여 CI에서는 제외합니다.")
 @ActiveProfiles("test")
 @SpringBootTest
 class RefundAdminServiceIT {

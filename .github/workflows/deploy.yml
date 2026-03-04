@@ -5,15 +5,54 @@ on:
     branches: [ "main" ]
 
 jobs:
+  ci:
+    name: Build & Test (Backend + Frontend)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Cache Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: wrapper
+
+      - name: Backend - Gradle build & test
+        working-directory: pupoo_backend
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean test
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: pupoo_frontend/package-lock.json
+
+      - name: Frontend - install & build
+        working-directory: pupoo_frontend
+        run: |
+          npm ci || npm install
+          npm run build
+
   deploy:
+    name: Docker Deploy (self-hosted)
+    needs: ci
     runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Docker Deploy
-        # 모든 빌드 로직은 Dockerfile이 처리합니다.
+      - name: Docker Compose up
         run: |
           docker-compose up -d --build
           docker image prune -f
