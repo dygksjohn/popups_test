@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Docker Deploy
+        # 이 명령어가 실행되면 Dockerfile 내부의 빌드 로직이 작동합니다.
         run: |
-          # 빌드와 배포를 Docker에게 전부 위임
           docker-compose up -d --build
           docker image prune -f
