@@ -1,18 +1,44 @@
+version: '3.8'
+
 services:
-  # 백엔드 서비스
+  # 1. Database (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: myapp
+      MYSQL_ROOT_PASSWORD: root # 실제 서비스 시 비밀번호 변경 권장
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # 2. Backend (Spring Boot)
   backend:
     build: ./backend
-    container_name: spring-api
-    expose:
-      - "8080"
+    container_name: spring-backend
     restart: always
+    environment:
+      # application.yml에서 ${DB_HOST:localhost}로 설정했다면 아래 값이 적용됨
+      - DB_HOST=db 
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/myapp?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
 
-  # 프론트엔드 서비스
+  # 3. Frontend (React + Nginx)
   frontend:
     build: ./frontend
-    container_name: react-web
+    container_name: react-frontend
+    restart: always
     ports:
-      - "80:80"
+      - "80:80" # 80포트로 접속하면 React 화면이 뜸
     depends_on:
       - backend
-    restart: always
+
+volumes:
+  db_data: # DB 데이터를 보존하기 위한 볼륨

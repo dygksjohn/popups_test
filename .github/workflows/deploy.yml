@@ -1,41 +1,29 @@
-name: CI/CD Deploy
+name: Java 21 Spring & React CI/CD
 
 on:
   push:
-    branches: [ "main" ] # 브랜치명 확인 (master 혹은 main)
+    branches: [ "main" ]
 
 jobs:
   deploy:
-    runs-on: self-hosted # 우분투 가상머신 러너
+    runs-on: self-hosted # 내 VM에서 실행
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      # 백엔드 빌드 (jar 생성)
-      - name: Build Backend
+      - name: Build Backend (Java 21)
         run: |
-          cd backend
           chmod +x ./gradlew
-          ./gradlew clean bootJar -x test
+          ./gradlew build -x test
 
-      # 프론트엔드 빌드 (dist 생성)
-      - name: Build Frontend
+      - name: Build Frontend (React)
         run: |
           cd frontend
           npm install
           npm run build
 
-      # 도커 컴포즈 실행
-      - name: Docker Compose Up
+      - name: Docker Deploy
         run: |
-          # 기존 컨테이너 종료 및 이미지 재빌드 후 실행
-          docker-compose down
           docker-compose up -d --build
+          docker image prune -f # 오래된 이미지 정리
