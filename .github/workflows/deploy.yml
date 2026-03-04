@@ -12,22 +12,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Backend (Java 21)
-        # 실제 폴더명인 pupoo_backend로 경로 지정
-        working-directory: ./pupoo_backend 
-        run: |
-          chmod +x ./gradlew
-          ./gradlew build -x test
-
-      - name: Build Frontend (React)
-        # 실제 폴더명인 pupoo_frontend로 경로 지정
-        working-directory: ./pupoo_frontend 
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install --include=optional
-          npm run build
-
       - name: Docker Deploy
-        # docker-compose.yml은 최상위 루트에 있으므로 working-directory 없이 실행
         run: |
+          # 빌드와 배포를 Docker에게 전부 위임
           docker-compose up -d --build
+          docker image prune -f
