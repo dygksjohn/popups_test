@@ -16,7 +16,7 @@ services:
 
   # 2. Backend (Spring Boot)
   backend:
-    build: ./backend
+    build: ./pupoo_backend
     container_name: spring-backend
     restart: always
     environment:
@@ -32,7 +32,7 @@ services:
 
   # 3. Frontend (React + Nginx)
   frontend:
-    build: ./frontend
+    build: ./pupoo_frontend
     container_name: react-frontend
     restart: always
     ports:

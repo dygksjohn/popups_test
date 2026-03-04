@@ -6,24 +6,27 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted # 내 VM에서 실행
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build Backend (Java 21)
+        # 실제 폴더명인 pupoo_backend로 경로 지정
+        working-directory: ./pupoo_backend 
         run: |
           chmod +x ./gradlew
           ./gradlew build -x test
 
       - name: Build Frontend (React)
+        # 실제 폴더명인 pupoo_frontend로 경로 지정
+        working-directory: ./pupoo_frontend 
         run: |
-          cd frontend
           npm install
           npm run build
 
       - name: Docker Deploy
+        # docker-compose.yml은 최상위 루트에 있으므로 working-directory 없이 실행
         run: |
           docker-compose up -d --build
-          docker image prune -f # 오래된 이미지 정리
