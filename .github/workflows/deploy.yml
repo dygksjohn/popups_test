@@ -23,8 +23,8 @@ jobs:
         # 실제 폴더명인 pupoo_frontend로 경로 지정
         working-directory: ./pupoo_frontend 
         run: |
-          rm -rf node_modules
-          npm ci || npm install # ci가 실패하면 install 시도
+          rm -rf node_modules package-lock.json
+          npm install --include=optional
           npm run build
 
       - name: Docker Deploy
