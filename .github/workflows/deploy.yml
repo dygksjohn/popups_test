@@ -38,7 +38,8 @@ jobs:
       - name: Frontend - install & build
         working-directory: pupoo_frontend
         run: |
-          npm ci || npm install
+          # lightningcss 등 플랫폼별 optional 의존성이 Linux 러너에 맞게 설치되도록 npm install 사용
+          npm install
           npm run build
 
   deploy:
